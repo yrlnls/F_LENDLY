@@ -1,0 +1,33 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "username": "applicant1",
+        "password": "password123",
+        "role": "applicant"
+      },
+      {
+        "id": 2,
+        "username": "admin",
+        "password": "9876",
+        "role": "admin"
+      }
+    ],
+    "loans": [
+      {
+        "id": 1,
+        "userId": 1,
+        "amount": 5000,
+        "purpose": "business expansion",
+        "status": "pending",
+        "repaymentSchedule": [
+          {
+            "date": "2024-12-31",
+            "amount": 1000,
+            "paid": false
+          }
+        ]
+      }
+    ]
+  }
+  
