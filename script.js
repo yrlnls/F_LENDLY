@@ -1,464 +1,658 @@
-// Show the login options for Applicants and Admins
-document.getElementById('showApplicantLogin').addEventListener('click', function () {
-  document.getElementById('applicantLoginContainer').style.display = 'block';
-  document.getElementById('adminLoginContainer').style.display = 'none';
-});
+// Base URL for JSON Server API
+const API_URL = "http://localhost:3000";
 
-document.getElementById('showAdminLogin').addEventListener('click', function () {
-  document.getElementById('adminLoginContainer').style.display = 'block';
-  document.getElementById('applicantLoginContainer').style.display = 'none';
-});
-
-// Show the registration form for Applicants
-document.getElementById('showRegisterForm').addEventListener('click', function () {
-  document.getElementById('registerFormContainer').style.display = 'block';
-});
-
-// Handle registration form submission
-document.getElementById('registerForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-  const username = document.getElementById('registerUsername').value;
-  const password = document.getElementById('registerPassword').value;
-
-  // Register the new user
-  fetch('http://localhost:3000/users', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      username: username,
-      password: password,
-      role: 'applicant' // Default role for registration
-    })
-  })
-    .then(response => response.json())
-    .then(data => {
-      alert('Registration successful! You can now log in.');
-      document.getElementById('registerFormContainer').style.display = 'none';
-    })
-    .catch(error => console.error('Error:', error));
-});
-
-// Authenticate user (both Applicants and Admins)
-function login(username, password) {
-  fetch('http://localhost:3000/users')
-    .then(response => response.json())
-    .then(users => {
-      const user = users.find(u => u.username === username && u.password === password);
-      if (user) {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        if (user.role === 'admin') {
-          alert('Success! Welcome, admin!');
-          window.location.href = 'admin.html'; // Redirect to admin page
-        } else {
-          window.location.href = 'applicant.html'; // Redirect to applicant page
-        }
-      } else {
-        alert('Invalid username or password!');
-      }
-    });
+// Utility function to simplify fetch with error handling
+async function apiFetch(url, options = {}) {
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
-// Handle login form submission for applicants
-document.getElementById('applicantLoginForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-  const username = document.getElementById('applicantUsername').value;
-  const password = document.getElementById('applicantPassword').value;
-  login(username, password);
-});
+// ======= Index Page Logic =======
 
-// Handle Admin Login
-document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-  
-  const adminUsername = document.getElementById('adminUsername').value;
-  const adminPassword = document.getElementById('adminPassword').value;
+if (document.getElementById("showApplicantLogin")) {
+  // Elements
+  const showApplicantLoginBtn = document.getElementById("showApplicantLogin");
+  const showAdminLoginBtn = document.getElementById("showAdminLogin");
 
-  // Sample credentials for admin (You can replace this with a real backend check)
-  const adminCredentials = {
-    username: 'admin',
-    password: 'admin123' // Replace with a secure method for production
+  const applicantLoginContainer = document.getElementById("applicantLoginContainer");
+  const adminLoginContainer = document.getElementById("adminLoginContainer");
+
+  const applicantLoginForm = document.getElementById("applicantLoginForm");
+  const adminLoginForm = document.getElementById("adminLoginForm");
+
+  const showRegisterFormBtn = document.getElementById("showRegisterForm");
+  const registerFormContainer = document.getElementById("registerFormContainer");
+  const registerForm = document.getElementById("registerForm");
+  const registerMessage = document.getElementById("registerMessage");
+  const adminMessage = document.getElementById("adminMessage");
+
+  // Show/hide login forms
+  showApplicantLoginBtn.onclick = () => {
+    applicantLoginContainer.style.display = "block";
+    adminLoginContainer.style.display = "none";
+    registerFormContainer.style.display = "none";
+    registerMessage.textContent = "";
   };
 
-  if (adminUsername === adminCredentials.username && adminPassword === adminCredentials.password) {
-    // Store the admin info in localStorage or sessionStorage for session management
-    localStorage.setItem('currentUser', JSON.stringify({
-      username: adminUsername,
-      role: 'admin'
-    }));
+  showAdminLoginBtn.onclick = () => {
+    adminLoginContainer.style.display = "block";
+    applicantLoginContainer.style.display = "none";
+    registerFormContainer.style.display = "none";
+    registerMessage.textContent = "";
+    adminMessage.textContent = "";
+  };
 
-    // Redirect to admin dashboard
-    window.location.href = 'admin-dashboard.html';  // Ensure this page exists
-  } else {
-    alert('Invalid admin username or password!');
-  }
-});
+  showRegisterFormBtn.onclick = () => {
+    registerFormContainer.style.display =
+      registerFormContainer.style.display === "block" ? "none" : "block";
+    registerMessage.textContent = "";
+  };
 
-// Handle loan application submission
-document.getElementById('loanForm').addEventListener('submit', function (event) {
-  event.preventDefault();
+  // Applicant Login Submit
+  applicantLoginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  // Collect form values
-  const applicantName = document.getElementById('applicantName').value;
-  const applicantEmail = document.getElementById('applicantEmail').value;
-  const amount = document.getElementById('amount').value;
-  const purpose = document.getElementById('purpose').value;
+    const username = document.getElementById("applicantUsername").value.trim();
+    const password = document.getElementById("applicantPassword").value.trim();
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));  // Get logged-in user
-
-  // Check for empty fields
-  if (!amount || !purpose) {
-    alert('Please fill out all fields.');
-    return;
-  }
-  // Calculate loan interest (2.5% per annum)
-  const interestRate = 2.5 / 100; // 2.5% interest rate
-  const loanInterest = amount * interestRate;
-  const totalLoan = amount + loanInterest;
-
-  // Submit loan application to the server
-  fetch('http://localhost:3000/loans', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      userId: currentUser.id,
-      amount: amount,
-      purpose: purpose,
-      interestRate: interestRate,
-      loanInterest: loanInterest,
-      totalLoan: totalLoan,
-      status: 'pending',
-      repaymentSchedule: [],
-      applicantName: applicantName,
-      applicantEmail: applicantEmail
-    })
-  })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('successMessage').style.display = 'block';
-      document.getElementById('loanDetails').style.display = 'block';
-      document.getElementById('loanAmount').innerText = amount;
-      document.getElementById('loanInterest').innerText = loanInterest.toFixed(2);
-      document.getElementById('totalLoan').innerText = totalLoan.toFixed(2);
-    })
-    .catch(error => console.error('Error:', error));
-});
-
-// Track loan status for current user
-function loadLoanStatus() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  fetch(`http://localhost:3000/loans?userId=${currentUser.id}`)
-    .then(response => response.json())
-    .then(loans => {
-      const loanStatusDiv = document.getElementById('loanStatus');
-      loanStatusDiv.innerHTML = '';
-      loans.forEach(loan => {
-        const loanDiv = document.createElement('div');
-        loanDiv.innerHTML = `
-          <p>Amount: $${loan.amount}</p>
-          <p>Purpose: ${loan.purpose}</p>
-          <p>Status: ${loan.status}</p>
-        `;
-        loanStatusDiv.appendChild(loanDiv);
-      });
-    });
-}
-
-// Track repayment schedule for current user
-function loadRepaymentSchedule() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  fetch(`http://localhost:3000/loans?userId=${currentUser.id}`)
-    .then(response => response.json())
-    .then(loans => {
-      const repaymentScheduleDiv = document.getElementById('repaymentSchedule');
-      repaymentScheduleDiv.innerHTML = '';
-      loans.forEach(loan => {
-        loan.repaymentSchedule.forEach(payment => {
-          const paymentDiv = document.createElement('div');
-          paymentDiv.innerHTML = `
-            <p>Date: ${payment.date}</p>
-            <p>Amount: $${payment.amount}</p>
-            <p>Paid: ${payment.paid ? 'Yes' : 'No'}</p>
-          `;
-          repaymentScheduleDiv.appendChild(paymentDiv);
-        });
-      });
-    });
-}
-
-// Handle payment submission
-document.getElementById('paymentForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-  const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-  if (!paymentAmount) {
-    alert('Please enter a payment amount.');
-    return;
-  }
-
-  // Update loan repayment schedule
-  fetch('http://localhost:3000/loans')
-    .then(response => response.json())
-    .then(loans => {
-      const loan = loans.find(l => l.userId === currentUser.id && l.status === 'approved');
-      if (loan) {
-        // Add the payment to the repayment schedule
-        const repaymentDate = new Date().toLocaleDateString();
-        loan.repaymentSchedule.push({ date: repaymentDate, amount: paymentAmount, paid: true });
-
-        // Update the loan record with the new repayment schedule
-        fetch(`http://localhost:3000/loans/${loan.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            repaymentSchedule: loan.repaymentSchedule
-          })
-        })
-          .then(response => response.json())
-          .then(updatedLoan => {
-            document.getElementById('paymentMessage').style.display = 'block';
-            document.getElementById('paymentMessage').innerText = 'Payment made successfully!';
-            loadRepaymentSchedule(); // Refresh repayment schedule
-          })
-          .catch(error => console.error('Error:', error));
-      } else {
-        alert('No approved loan found for you.');
-      }
-    });
-});
-
-// Event listener for tracking loan status
-document.getElementById('trackLoanStatus').addEventListener('click', function () {
-  loadLoanStatus();
-});
-
-// Event listener for tracking repayment schedule
-document.getElementById('trackRepaymentSchedule').addEventListener('click', function () {
-  loadRepaymentSchedule();
-});
-// Load loan for editing
-function loadLoanForEdit() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));  // Get logged-in user
-  fetch(`http://localhost:3000/loans?userId=${currentUser.id}`)
-    .then(response => response.json())
-    .then(loans => {
-      if (loans.length > 0) {
-        const loan = loans[0]; // Assuming the user has only one loan application
-        document.getElementById('editAmount').value = loan.amount;
-        document.getElementById('editPurpose').value = loan.purpose;
-      }
-    });
-}
-
-// Edit loan application
-document.getElementById('editLoanForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  const amount = document.getElementById('editAmount').value;
-  const purpose = document.getElementById('editPurpose').value;
-
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));  // Get logged-in user
-
-  // Fetch the loan details to edit
-  fetch(`http://localhost:3000/loans?userId=${currentUser.id}`)
-    .then(response => response.json())
-    .then(loans => {
-      if (loans.length > 0) {
-        const loan = loans[0]; // Assuming the user has only one loan application
-
-        // Update loan application
-        fetch(`http://localhost:3000/loans/${loan.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            amount: amount,
-            purpose: purpose
-          })
-        })
-          .then(response => response.json())
-          .then(data => {
-            // Display success message for edit
-            document.getElementById('editMessage').style.display = 'block';
-            setTimeout(() => {
-              document.getElementById('editMessage').style.display = 'none';
-            }, 3000);
-          });
-      }
-    });
-});
-
-// Ensure the loan information is pre-loaded on page load
-window.onload = loadLoanForEdit;
-
-// Track repayment schedule
-document.getElementById('trackRepaymentSchedule').addEventListener('click', function () {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));  // Get logged-in user
-  fetch(`http://localhost:3000/loans?userId=${currentUser.id}`)
-    .then(response => response.json())
-    .then(loans => {
-      const repaymentScheduleDiv = document.getElementById('repaymentSchedule');
-      repaymentScheduleDiv.innerHTML = '';  // Clear previous content
-
-      // Loop through loans and repayment schedule
-      loans.forEach(loan => {
-        loan.repaymentSchedule.forEach(payment => {
-          repaymentScheduleDiv.innerHTML += `
-            <p><strong>Date:</strong> ${payment.date}</p>
-            <p><strong>Amount:</strong> ${payment.amount}</p>
-            <p><strong>Paid:</strong> ${payment.paid ? 'Yes' : 'No'}</p>
-          `;
-        });
-      });
-    });
-});
-
-
-// Event listeners for tracking loan status and repayment schedule
-document.getElementById('trackLoanStatus').addEventListener('click', loadLoanStatus);
-document.getElementById('trackRepaymentSchedule').addEventListener('click', loadRepaymentSchedule);
-
-// Fetch all loan applications
-function loadApplications() {
-  fetch('http://localhost:3000/loans')
-    .then(response => response.json())
-    .then(applications => {
-      const loanApplicationsDiv = document.getElementById('loanApplications');
-      loanApplicationsDiv.innerHTML = ''; // Clear previous content
-      applications.forEach(application => {
-        const applicationDiv = document.createElement('div');
-        applicationDiv.classList.add('loan-application');
-        applicationDiv.innerHTML = `
-          <p><strong>Applicant ID:</strong> ${application.userId}</p>
-          <p><strong>Amount:</strong> ${application.amount}</p>
-          <p><strong>Purpose:</strong> ${application.purpose}</p>
-          <p><strong>Status:</strong> ${application.status}</p>
-          <button onclick="approveApplication(${application.id})">Approve</button>
-          <button onclick="rejectApplication(${application.id})">Reject</button>
-        `;
-        loanApplicationsDiv.appendChild(applicationDiv);
-      });
-    });
-}
-
-// Approve a loan application
-function approveApplication(id) {
-  updateApplicationStatus(id, 'approved');
-}
-
-// Reject a loan application
-function rejectApplication(id) {
-  updateApplicationStatus(id, 'rejected');
-}
-
-// Update loan application status (approve or reject)
-function updateApplicationStatus(id, status) {
-  fetch(`http://localhost:3000/loans/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ status: status })
-  })
-    .then(response => response.json())
-    .then(data => {
-      alert(`Loan application ${status} successfully!`);
-      loadApplications(); // Refresh loan applications list
-    });
-}
-
-// Generate loan reports (approved, rejected, etc.)
-function generateReports() {
-  fetch('http://localhost:3000/loans')
-    .then(response => response.json())
-    .then(loans => {
-      const reportsDiv = document.getElementById('reports');
-      const approvedLoans = loans.filter(loan => loan.status === 'approved').length;
-      const rejectedLoans = loans.filter(loan => loan.status === 'rejected').length;
-      reportsDiv.innerHTML = `
-        <p><strong>Total Loan Applications:</strong> ${loans.length}</p>
-        <p><strong>Approved Loans:</strong> ${approvedLoans}</p>
-        <p><strong>Rejected Loans:</strong> ${rejectedLoans}</p>
-      `;
-    });
-}
-
-// Load all applications when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-  loadApplications();
-});
-
-// Load user management data for admin
-function loadUserManagement() {
-  fetch('http://localhost:3000/users')
-    .then(response => response.json())
-    .then(users => {
-      const userManagementDiv = document.getElementById('userManagement');
-      userManagementDiv.innerHTML = ''; // Clear previous list
+    try {
+      const users = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}&role=applicant`);
       if (users.length === 0) {
-        userManagementDiv.innerHTML = '<p>No users found.</p>';
-      } else {
-        users.forEach(user => {
-          const userDiv = document.createElement('div');
-          userDiv.innerHTML = `
-            <p><strong>Username:</strong> ${user.username}</p>
-            <p><strong>Role:</strong> ${user.role}</p>
-            <button onclick="deleteUser(${user.id})">Delete User</button>
-            <button onclick="lockUser(${user.id})">Lock User</button>
-          `;
-          userManagementDiv.appendChild(userDiv);
-        });
+        alert("Applicant user not found");
+        return;
       }
-    })
-    .catch(error => {
-      console.error('Error loading users:', error);
-      document.getElementById('userManagement').innerHTML = 'Error loading users.';
-    });
+      const user = users[0];
+      if (user.password !== password) {
+        alert("Incorrect password");
+        return;
+      }
+      // Save session to localStorage
+      localStorage.setItem("user", JSON.stringify({ id: user.id, username: user.username, role: user.role }));
+      // Redirect to applicant dashboard
+      window.location.href = "applicant.html";
+    } catch (error) {
+      alert("Login failed. Try again later.");
+    }
+  });
+
+  // Admin Login Submit
+  adminLoginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("adminUsername").value.trim();
+    const password = document.getElementById("adminPassword").value.trim();
+
+    try {
+      const users = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}&role=admin`);
+      if (users.length === 0) {
+        adminMessage.textContent = "Admin user not found";
+        return;
+      }
+      const user = users[0];
+      if (user.password !== password) {
+        adminMessage.textContent = "Incorrect password";
+        return;
+      }
+      // Save session
+      localStorage.setItem("user", JSON.stringify({ id: user.id, username: user.username, role: user.role }));
+      // Redirect to admin dashboard
+      window.location.href = "admin.html";
+    } catch (error) {
+      adminMessage.textContent = "Login failed. Try again later.";
+    }
+  });
+
+  // Registration Submit
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("registerUsername").value.trim();
+    const password = document.getElementById("registerPassword").value.trim();
+
+    if (username.length < 3 || password.length < 3) {
+      registerMessage.textContent = "Username and password must be at least 3 characters.";
+      registerMessage.style.color = "red";
+      return;
+    }
+
+    try {
+      // Check if username exists
+      const existingUsers = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}`);
+      if (existingUsers.length > 0) {
+        registerMessage.textContent = "Username already taken.";
+        registerMessage.style.color = "red";
+        return;
+      }
+
+      // Create new applicant user
+      const newUser = await apiFetch(`${API_URL}/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, role: "applicant" }),
+      });
+
+      registerMessage.textContent = "Registration successful! You can now log in.";
+      registerMessage.style.color = "green";
+      registerForm.reset();
+      registerFormContainer.style.display = "none";
+    } catch (error) {
+      registerMessage.textContent = "Registration failed. Try again later.";
+      registerMessage.style.color = "red";
+    }
+  });
 }
 
-// Delete user
-function deleteUser(id) {
-  fetch(`http://localhost:3000/users/${id}`, {
-    method: 'DELETE'
-  })
-    .then(response => response.json())
-    .then(data => {
-      alert('User deleted!');
-      loadUserManagement(); // Refresh the user management view
-    })
-    .catch(error => {
-      console.error('Error deleting user:', error);
-      alert('Failed to delete user.');
-    });
+// ======= Applicant Page Logic =======
+
+if (document.getElementById("loanForm")) {
+  // Check if user logged in and role is applicant
+  const sessionUser = JSON.parse(localStorage.getItem("user"));
+  if (!sessionUser || sessionUser.role !== "applicant") {
+    alert("Please login as applicant.");
+    window.location.href = "index.html";
+  }
+
+  const loanForm = document.getElementById("loanForm");
+  const loanApplicationsDiv = document.getElementById("loanApplications");
+  const successMessageDiv = document.getElementById("successMessage");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // Fetch and display loans for current applicant
+  async function loadLoans() {
+    loanApplicationsDiv.innerHTML = "<p>Loading your loan applications...</p>";
+    try {
+      const loans = await apiFetch(`${API_URL}/loans?userId=${sessionUser.id}`);
+      if (loans.length === 0) {
+        loanApplicationsDiv.innerHTML = "<p>You have no loan applications yet.</p>";
+        return;
+      }
+      // Show each loan with status and payment info
+      loanApplicationsDiv.innerHTML = loans
+        .map(
+          (loan) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Ksh ${loan.amount.toLocaleString()}</h5>
+            <p class="card-text"><strong>Purpose:</strong> ${loan.purpose}</p>
+            <p class="card-text"><strong>Status:</strong> ${loan.status}</p>
+            <p class="card-text"><strong>Applied On:</strong> ${new Date(loan.createdAt).toLocaleDateString()}</p>
+            ${
+              loan.status === "approved"
+                ? `<p class="card-text"><strong>Repayment Schedule:</strong> ${loan.repaymentSchedule || "N/A"}</p>`
+                : ""
+            }
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    } catch (error) {
+      loanApplicationsDiv.innerHTML = "<p>Error loading loans.</p>";
+    }
+  }
+
+  // Submit loan application
+  loanForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fullName = document.getElementById("applicantName").value.trim();
+    const email = document.getElementById("applicantEmail").value.trim();
+    const businessName = document.getElementById("businessName").value.trim();
+    const businessReg = document.getElementById("businessRegistration").value.trim();
+    const amount = Number(document.getElementById("amount").value);
+    const purpose = document.getElementById("purpose").value.trim();
+
+    if (amount <= 0) {
+      alert("Loan amount must be greater than zero.");
+      return;
+    }
+    if (!fullName || !email || !purpose) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const newLoan = {
+      userId: sessionUser.id,
+      fullName,
+      email,
+      businessName,
+      businessRegistration: businessReg,
+      amount,
+      purpose,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await apiFetch(`${API_URL}/loans`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newLoan),
+      });
+      successMessageDiv.style.display = "block";
+      loanForm.reset();
+      loadLoans();
+      setTimeout(() => {
+        successMessageDiv.style.display = "none";
+      }, 3000);
+    } catch (error) {
+      alert("Failed to submit loan application.");
+    }
+  });
+
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  };
+
+  loadLoans();
 }
 
-// Lock user account
-function lockUser(id) {
-  fetch(`http://localhost:3000/users/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ locked: true })
-  })
-    .then(response => response.json())
-    .then(data => {
-      alert('User account locked!');
-      loadUserManagement(); // Refresh the user management view
-    })
-    .catch(error => {
-      console.error('Error locking user:', error);
-      alert('Failed to lock user.');
-    });
+// ======= Admin Page Logic =======
+
+if (document.getElementById("loanApplicationsAdmin")) {
+  const sessionUser = JSON.parse(localStorage.getItem("user"));
+  if (!sessionUser || sessionUser.role !== "admin") {
+    alert("Please login as admin.");
+    window.location.href = "index.html";
+  }
+
+  const loanApplicationsAdminDiv = document.getElementById("loanApplicationsAdmin");
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+  async function loadAllLoans() {
+    loanApplicationsAdminDiv.innerHTML = "<p>Loading loan applications...</p>";
+    try {
+      const loans = await apiFetch(`${API_URL}/loans?_expand=user`);
+      // The above expands user details if using JSON Server's expand functionality
+      // fallback: manually fetch user info per loan
+
+      // To get user info for each loan if _expand unsupported:
+      // for now we assume no expand; we get user by userId per loan
+
+      // Since _expand might not be set, let's fetch users separately
+      const users = await apiFetch(`${API_URL}/users`);
+
+      // Map userId to user
+      const userMap = {};
+      users.forEach((u) => (userMap[u.id] = u));
+
+      if (loans.length === 0) {
+        loanApplicationsAdminDiv.innerHTML = "<p>No loan applications found.</p>";
+        return;
+      }
+
+      loanApplicationsAdminDiv.innerHTML = loans
+        .map((loan) => {
+          const user = userMap[loan.userId];
+          return `
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Ksh ${loan.amount.toLocaleString()}</h5>
+              <p><strong>Applicant:</strong> ${user ? user.username : "Unknown"}</p>
+              <p><strong>Full Name:</strong> ${loan.fullName}</p>
+              <p><strong>Email:</strong> ${loan.email}</p>
+              <p><strong>Business:</strong> ${loan.businessName || "N/A"}</p>
+              <p><strong>Purpose:</strong> ${loan.purpose}</p>
+              <p><strong>Status:</strong> <span id="status-${loan.id}">${loan.status}</span></p>
+              <div class="mb-3">
+                <label for="statusSelect-${loan.id}" class="form-label">Update Status</label>
+                <select id="statusSelect-${loan.id}" class="form-select">
+                  <option value="pending" ${
+                    loan.status === "pending" ? "selected" : ""
+                  }>Pending</option>
+                  <option value="approved" ${
+                    loan.status === "approved" ? "selected" : ""
+                  }>Approved</option>
+                  <option value="rejected" ${
+                    loan.status === "rejected" ? "selected" : ""
+                  }>Rejected</option>
+                </select>
+              </div>
+              <button data-loanid="${loan.id}" class="btn btn-primary updateStatusBtn">Update</button>
+            </div>
+          </div>
+          `;
+        })
+        .join("");
+
+      // Attach event listeners to all update buttons
+      document.querySelectorAll(".updateStatusBtn").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          const loanId = e.target.getAttribute("data-loanid");
+          const selectElem = document.getElementById(`statusSelect-${loanId}`);
+          const newStatus = selectElem.value;
+
+          try {
+            const response = await apiFetch(`${API_URL}/loans/${loanId}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: newStatus }),
+            });
+            document.getElementById(`status-${loanId}`).textContent = newStatus;
+            alert("Status updated.");
+          } catch (error) {
+            alert("Failed to update status.");
+          }
+        });
+      });
+    } catch (error) {
+      loanApplicationsAdminDiv.innerHTML = "<p>Error loading loan applications.</p>";
+    }
+  }
+
+  adminLogoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  };
+
+  loadAllLoans();
+
+const API_URL = "http://localhost:3000";
+
+// Helper fetch wrapper
+async function apiFetch(url, options = {}) {
+  const res = await fetch(url, options);
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
 }
 
-// Call the functions to load initial data
-loadApplications();        // Load the loan applications
-loadUserManagement();      // Load the users for management
+// ======= Landing Page Logic (Login / Register) =======
+if (document.getElementById("applicantLoginForm") || document.getElementById("adminLoginForm") || document.getElementById("registerForm")) {
+  const applicantLoginForm = document.getElementById("applicantLoginForm");
+  const adminLoginForm = document.getElementById("adminLoginForm");
+  const registerForm = document.getElementById("registerForm");
+  const registerFormContainer = document.getElementById("registerFormContainer");
+  const registerMessage = document.getElementById("registerMessage");
+  const adminMessage = document.getElementById("adminMessage");
+
+  // Applicant Login
+  if (applicantLoginForm) {
+    applicantLoginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("applicantUsername").value.trim();
+      const password = document.getElementById("applicantPassword").value.trim();
+
+      try {
+        const users = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}&role=applicant`);
+        if (users.length === 0) {
+          alert("Applicant user not found");
+          return;
+        }
+        const user = users[0];
+        if (user.password !== password) {
+          alert("Incorrect password");
+          return;
+        }
+        localStorage.setItem("user", JSON.stringify({ id: user.id, username: user.username, role: user.role }));
+        window.location.href = "applicant.html";
+      } catch {
+        alert("Login failed. Try again later.");
+      }
+    });
+  }
+
+  // Admin Login
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("adminUsername").value.trim();
+      const password = document.getElementById("adminPassword").value.trim();
+
+      try {
+        const users = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}&role=admin`);
+        if (users.length === 0) {
+          adminMessage.textContent = "Admin user not found";
+          return;
+        }
+        const user = users[0];
+        if (user.password !== password) {
+          adminMessage.textContent = "Incorrect password";
+          return;
+        }
+        localStorage.setItem("user", JSON.stringify({ id: user.id, username: user.username, role: user.role }));
+        window.location.href = "admin.html";
+      } catch {
+        adminMessage.textContent = "Login failed. Try again later.";
+      }
+    });
+  }
+
+  // Registration
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("registerUsername").value.trim();
+      const password = document.getElementById("registerPassword").value.trim();
+
+      if (username.length < 3 || password.length < 3) {
+        registerMessage.textContent = "Username and password must be at least 3 characters.";
+        registerMessage.style.color = "red";
+        return;
+      }
+
+      try {
+        const existingUsers = await apiFetch(`${API_URL}/users?username=${encodeURIComponent(username)}`);
+        if (existingUsers.length > 0) {
+          registerMessage.textContent = "Username already taken.";
+          registerMessage.style.color = "red";
+          return;
+        }
+
+        await apiFetch(`${API_URL}/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password, role: "applicant" }),
+        });
+
+        registerMessage.textContent = "Registration successful! You can now log in.";
+        registerMessage.style.color = "green";
+        registerForm.reset();
+        registerFormContainer.style.display = "none";
+      } catch {
+        registerMessage.textContent = "Registration failed. Try again later.";
+        registerMessage.style.color = "red";
+      }
+    });
+  }
+}
+
+// ======= Applicant Page Logic =======
+if (document.getElementById("loanForm")) {
+  const sessionUser = JSON.parse(localStorage.getItem("user"));
+  if (!sessionUser || sessionUser.role !== "applicant") {
+    alert("Please login as applicant.");
+    window.location.href = "index.html";
+  }
+
+  const loanForm = document.getElementById("loanForm");
+  const loanApplicationsDiv = document.getElementById("loanApplications");
+  const successMessageDiv = document.getElementById("successMessage");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  async function loadLoans() {
+    loanApplicationsDiv.innerHTML = "<p>Loading your loan applications...</p>";
+    try {
+      const loans = await apiFetch(`${API_URL}/loans?userId=${sessionUser.id}`);
+      if (loans.length === 0) {
+        loanApplicationsDiv.innerHTML = "<p>You have no loan applications yet.</p>";
+        return;
+      }
+      loanApplicationsDiv.innerHTML = loans
+        .map(
+          (loan) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Ksh ${loan.amount.toLocaleString()}</h5>
+            <p class="card-text"><strong>Purpose:</strong> ${loan.purpose}</p>
+            <p class="card-text"><strong>Status:</strong> ${loan.status}</p>
+            <p class="card-text"><strong>Applied On:</strong> ${new Date(loan.createdAt).toLocaleDateString()}</p>
+            ${
+              loan.status === "approved"
+                ? `<p class="card-text"><strong>Repayment Schedule:</strong> ${loan.repaymentSchedule || "N/A"}</p>`
+                : ""
+            }
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    } catch {
+      loanApplicationsDiv.innerHTML = "<p>Error loading loans.</p>";
+    }
+  }
+
+  loanForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const fullName = document.getElementById("applicantName").value.trim();
+    const email = document.getElementById("applicantEmail").value.trim();
+    const businessName = document.getElementById("businessName").value.trim();
+    const businessReg = document.getElementById("businessRegistration").value.trim();
+    const amount = Number(document.getElementById("amount").value);
+    const purpose = document.getElementById("purpose").value.trim();
+
+    if (amount <= 0) {
+      alert("Loan amount must be greater than zero.");
+      return;
+    }
+    if (!fullName || !email || !purpose) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const newLoan = {
+      userId: sessionUser.id,
+      fullName,
+      email,
+      businessName,
+      businessRegistration: businessReg,
+      amount,
+      purpose,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await apiFetch(`${API_URL}/loans`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newLoan),
+      });
+      successMessageDiv.style.display = "block";
+      loanForm.reset();
+      loadLoans();
+      setTimeout(() => {
+        successMessageDiv.style.display = "none";
+      }, 3000);
+    } catch {
+      alert("Failed to submit loan application.");
+    }
+  });
+
+  logoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  };
+
+  loadLoans();
+}
+
+// ======= Admin Page Logic =======
+if (document.getElementById("loanApplicationsAdmin")) {
+  const sessionUser = JSON.parse(localStorage.getItem("user"));
+  if (!sessionUser || sessionUser.role !== "admin") {
+    alert("Please login as admin.");
+    window.location.href = "index.html";
+  }
+
+  const loanApplicationsAdminDiv = document.getElementById("loanApplicationsAdmin");
+  const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+
+  async function loadAllLoans() {
+    loanApplicationsAdminDiv.innerHTML = "<p>Loading loan applications...</p>";
+    try {
+      const loans = await apiFetch(`${API_URL}/loans`);
+      const users = await apiFetch(`${API_URL}/users`);
+      const userMap = {};
+      users.forEach((u) => (userMap[u.id] = u));
+
+      if (loans.length === 0) {
+        loanApplicationsAdminDiv.innerHTML = "<p>No loan applications found.</p>";
+        return;
+      }
+
+      loanApplicationsAdminDiv.innerHTML = loans
+        .map((loan) => {
+          const user = userMap[loan.userId];
+          return `
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Ksh ${loan.amount.toLocaleString()}</h5>
+              <p><strong>Applicant:</strong> ${user ? user.username : "Unknown"}</p>
+              <p><strong>Full Name:</strong> ${loan.fullName}</p>
+              <p><strong>Email:</strong> ${loan.email}</p>
+              <p><strong>Business:</strong> ${loan.businessName || "N/A"}</p>
+              <p><strong>Purpose:</strong> ${loan.purpose}</p>
+              <p><strong>Status:</strong> <span id="status-${loan.id}">${loan.status}</span></p>
+              <div class="mb-3">
+                <label for="statusSelect-${loan.id}" class="form-label">Update Status</label>
+                <select id="statusSelect-${loan.id}" class="form-select">
+                  <option value="pending" ${
+                    loan.status === "pending" ? "selected" : ""
+                  }>Pending</option>
+                  <option value="approved" ${
+                    loan.status === "approved" ? "selected" : ""
+                  }>Approved</option>
+                  <option value="rejected" ${
+                    loan.status === "rejected" ? "selected" : ""
+                  }>Rejected</option>
+                </select>
+              </div>
+              <button data-loanid="${loan.id}" class="btn btn-primary updateStatusBtn">Update</button>
+            </div>
+          </div>
+          `;
+        })
+        .join("");
+
+      document.querySelectorAll(".updateStatusBtn").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          const loanId = e.target.getAttribute("data-loanid");
+          const selectElem = document.getElementById(`statusSelect-${loanId}`);
+          const newStatus = selectElem.value;
+
+          try {
+            await apiFetch(`${API_URL}/loans/${loanId}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: newStatus }),
+            });
+            document.getElementById(`status-${loanId}`).textContent = newStatus;
+            alert("Status updated.");
+          } catch {
+            alert("Failed to update status.");
+          }
+        });
+      });
+    } catch {
+      loanApplicationsAdminDiv.innerHTML = "<p>Error loading loan applications.</p>";
+    }
+  }
+
+  adminLogoutBtn.onclick = () => {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  };
+
+  loadAllLoans();
+}}

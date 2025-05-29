@@ -1,61 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Applicant Dashboard</title>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Applicant Dashboard - F-lendly</title>
+
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="style.css">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container mt-5">
     <h2>Loan Application</h2>
     <form id="loanForm" class="mb-4">
       <div class="mb-3">
+        <label for="applicantName" class="form-label">Full Name</label>
+        <input
+          type="text"
+          id="applicantName"
+          class="form-control"
+          placeholder="Full Name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="applicantEmail" class="form-label">Email Address</label>
+        <input
+          type="email"
+          id="applicantEmail"
+          class="form-control"
+          placeholder="Email Address"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="businessName" class="form-label"
+          >Business Name (if applicable)</label
+        >
+        <input
+          type="text"
+          id="businessName"
+          class="form-control"
+          placeholder="Business Name"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="businessRegistration" class="form-label"
+          >Business Registration Number (if applicable)</label
+        >
+        <input
+          type="text"
+          id="businessRegistration"
+          class="form-control"
+          placeholder="Business Registration Number"
+        />
+      </div>
+      <div class="mb-3">
         <label for="amount" class="form-label">Loan Amount</label>
-        <input type="number" id="amount" class="form-control" placeholder="Loan Amount" required>
+        <input
+          type="number"
+          id="amount"
+          class="form-control"
+          placeholder="Loan Amount"
+          required
+          min="1"
+        />
       </div>
       <div class="mb-3">
         <label for="purpose" class="form-label">Purpose</label>
-        <input type="text" id="purpose" class="form-control" placeholder="Purpose" required>
+        <input
+          type="text"
+          id="purpose"
+          class="form-control"
+          placeholder="Purpose"
+          required
+        />
       </div>
       <button type="submit" class="btn btn-primary">Apply</button>
     </form>
-    <div id="successMessage" class="alert alert-success" style="display: none;">Loan application submitted successfully!</div>
-    <div id="loanDetails" style="display: none;">
-      <h3>Your Loan Details</h3>
-      <p>Loan Amount: $<span id="loanAmount"></span></p>
-      <p>Annual Interest Rate: 2.5%</p>
-      <p>Interest: $<span id="loanInterest"></span></p>
-      <p>Total Loan (Amount + Interest): $<span id="totalLoan"></span></p>
-    </div>
-    
-    <h2 class="mt-5">Loan Status</h2>
-    <button id="trackLoanStatus" class="btn btn-info">Track Loan Status</button>
-    <div id="loanStatus"></div>
 
-    <h2 class="mt-5">Repayment Schedule</h2>
-    <button id="trackRepaymentSchedule" class="btn btn-warning">Track Repayment Schedule</button>
-    <div id="repaymentSchedule"></div>
-    
-    <h2 class="mt-5">Make Payment</h2>
-    <form id="paymentForm">
-      <div class="mb-3">
-        <label for="paymentAmount" class="form-label">Enter Payment Amount</label>
-        <input type="number" id="paymentAmount" class="form-control" placeholder="Enter payment amount" required>
-      </div>
-      <button type="submit" class="btn btn-success">Make Payment</button>
-    </form>
-    <div id="paymentMessage" style="display: none;"></div>
+    <div
+      id="successMessage"
+      class="alert alert-success"
+      style="display: none"
+    >
+      Loan application submitted successfully!
+    </div>
+
+    <h2 class="mt-5">Your Loan Applications</h2>
+    <div id="loanApplications" class="mb-5"></div>
+
+    <button id="logoutBtn" class="btn btn-danger">Logout</button>
   </div>
 
-  <!-- Bootstrap JS and Popper.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-  
   <script src="script.js"></script>
 </body>
 </html>
