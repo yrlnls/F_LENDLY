@@ -1,16 +1,16 @@
 {
   "users": [
     {
-      "id": "1",
-      "username": "applicant1",
-      "password": "password123",
-      "role": "applicant"
+      "id": 1,
+      "name": "Alice Smith",
+      "email": "alice@example.com",
+      "registeredAt": "2024-06-01 10:00:00"
     },
     {
-      "id": "2",
-      "username": "admin",
-      "password": "9876",
-      "role": "admin"
+      "id": 2,
+      "name": "Bob Johnson",
+      "email": "bob@example.com",
+      "registeredAt": "2024-06-02 11:30:00"
     },
     {
       "id": "f0b6",
@@ -21,30 +21,30 @@
   ],
   "loans": [
     {
-      "id": "1",
+      "id": 1001,
       "userId": 1,
+      "email": "alice@example.com",
       "amount": 5000,
-      "purpose": "business expansion",
-      "status": "rejected",
-      "repaymentSchedule": [
-        {
-          "date": "2024-12-31",
-          "amount": 1000,
-          "paid": false
-        }
+      "purpose": "Business Expansion",
+      "status": "approved",
+      "submittedAt": "2024-06-03 09:00:00",
+      "paymentStatus": "1 of 3 paid",
+      "repayments": [
+        { "due": "2024-07-03", "paid": true },
+        { "due": "2024-08-03", "paid": false },
+        { "due": "2024-09-03", "paid": false }
       ]
     },
     {
-      "id": "7c39",
-      "userId": "1",
-      "fullName": "tillen",
-      "email": "t@123.com",
-      "businessName": "tee inc.",
-      "businessRegistration": "4321",
-      "amount": 12500,
-      "purpose": "business loan",
-      "status": "approved",
-      "createdAt": "2025-06-07T13:20:59.440Z"
+      "id": 1002,
+      "userId": 2,
+      "email": "bob@example.com",
+      "amount": 2000,
+      "purpose": "Equipment Purchase",
+      "status": "pending",
+      "submittedAt": "2024-06-04 14:15:00",
+      "paymentStatus": "-",
+      "repayments": []
     }
   ]
 }

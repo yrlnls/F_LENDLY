@@ -11,8 +11,40 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Simple loading spinner style */
+    #loadingSpinner {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.7);
+      align-items: center;
+      justify-content: center;
+    }
+    #loadingSpinner .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+    @media (max-width: 576px) {
+      .container {
+        padding: 0 5px;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      .table {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="loadingSpinner" class="d-flex">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   <div class="container mt-5">
     <h2>Loan Application</h2>
     <form id="loanForm" class="mb-4">
@@ -91,11 +123,52 @@
     </div>
 
     <h2 class="mt-5">Your Loan Applications</h2>
-    <div id="loanApplications" class="mb-5"></div>
+    <div id="loanApplications" class="mb-5">
+      <table class="table table-bordered" id="applicantLoansTable">
+        <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Amount</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Payment Status</th>
+            <th>Submitted At</th>
+            <th>Repayment Schedule</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loan applications will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Repayment Schedule Modal -->
+    <div class="modal fade" id="repaymentModal" tabindex="-1" aria-labelledby="repaymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="repaymentModalLabel">Repayment Schedule</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="repaymentModalBody">
+            <!-- Repayment schedule will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
 
     <button id="logoutBtn" class="btn btn-danger">Logout</button>
   </div>
 
   <script src="script.js"></script>
+  <script>
+    // Show/hide loading spinner helpers
+    window.showLoading = function() {
+      document.getElementById('loadingSpinner').style.display = 'flex';
+    }
+    window.hideLoading = function() {
+      document.getElementById('loadingSpinner').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
