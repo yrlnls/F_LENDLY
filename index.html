@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>F-lendly Home</title>
+  <title>F-lendly - Professional Loan Solutions</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
   <link
@@ -15,46 +20,9 @@
     rel="stylesheet"
   />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .hero-section {
-      background: linear-gradient(120deg, #007bff 60%, #ffc107 100%);
-      padding: 60px 0 40px 0;
-    }
-    .feature-box {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      padding: 30px 10px;
-      margin-bottom: 30px;
-      min-height: 220px;
-      transition: box-shadow 0.2s;
-    }
-    .feature-box:hover {
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-    }
-    .process-step {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 20px 10px;
-      margin-bottom: 20px;
-      min-height: 160px;
-    }
-    @media (max-width: 576px) {
-      .hero-section {
-        padding: 30px 0 20px 0;
-      }
-      .feature-box, .process-step {
-        min-height: unset;
-        padding: 15px 5px;
-      }
-      h1, h2 {
-        font-size: 1.3rem;
-      }
-    }
-  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">
         <i class="fas fa-hand-holding-dollar"></i> F-lendly
@@ -76,126 +44,265 @@
             <a class="nav-link" href="index.html">Home</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#process">Process</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="login.html">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="register.html">Register</a>
           </li>
           <li class="nav-item">
-            <a class="btn btn-primary" href="applicant.html">Apply for Loan</a>
+            <a class="btn btn-primary ms-2" href="applicant.html">
+              <i class="fas fa-rocket"></i> Apply Now
+            </a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <header class="hero-section text-center text-white">
+  <header class="hero-section text-center text-white" style="margin-top: 76px;">
     <div class="container">
-      <h1>Simple, Fast Loan Applications</h1>
-      <p class="lead">
-        Get the financial support you need with our transparent and efficient loan process. Apply in minutes and get a decision quickly.
-      </p>
-      <a href="applicant.html" class="btn btn-warning btn-lg">Apply Now</a>
-      <!-- Clear CTA for loan application -->
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="display-4 fw-bold mb-4">
+            Smart Loan Solutions for Your Financial Goals
+          </h1>
+          <p class="lead mb-5">
+            Experience the future of lending with our AI-powered platform. Get instant decisions, 
+            competitive rates, and transparent terms that work for you.
+          </p>
+          <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <a href="applicant.html" class="btn btn-warning btn-lg px-4 py-3">
+              <i class="fas fa-rocket me-2"></i>Start Your Application
+            </a>
+            <a href="#process" class="btn btn-outline-light btn-lg px-4 py-3">
+              <i class="fas fa-play-circle me-2"></i>How It Works
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
-  <!-- Loan Application Process Section -->
-  <section class="loan-process py-5 bg-light">
-    <div class="container text-center">
-      <h2>How Our Loan Application Process Works</h2>
-      <div class="row justify-content-center mt-4">
-        <div class="col-md-3">
-          <div class="process-step mb-4">
-            <span class="badge bg-primary rounded-pill mb-2">1</span>
-            <h5>Register or Login</h5>
-            <p>Create an account or log in to get started.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="process-step mb-4">
-            <span class="badge bg-primary rounded-pill mb-2">2</span>
-            <h5>Submit Application</h5>
-            <p>Fill out our simple online loan application form.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="process-step mb-4">
-            <span class="badge bg-primary rounded-pill mb-2">3</span>
-            <h5>Get a Decision</h5>
-            <p>Receive a quick decision from our team, usually within 24 hours.</p>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="process-step mb-4">
-            <span class="badge bg-primary rounded-pill mb-2">4</span>
-            <h5>Access Funds</h5>
-            <p>Once approved, your funds will be disbursed promptly.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="why-choose-us py-5">
-    <div class="container text-center">
-      <h2>Why Choose F-lendly?</h2>
-      <p class="lead mb-5">We make the loan application process simple and transparent</p>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-bolt fa-3x"></i>
-            <h3>Quick Application</h3>
-            <p>Complete your application in minutes with our streamlined process</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-check-circle fa-3x"></i>
-            <h3>Fast Approval</h3>
-            <p>Get a decision on your loan application within 24 hours</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-shield-alt fa-3x"></i>
-            <h3>Secure Process</h3>
-            <p>Your data is protected with the highest security standards</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-handshake fa-3x"></i>
-            <h3>Flexible Terms</h3>
-            <p>Choose from a range of loan terms that fit your needs</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-percent fa-3x"></i>
-            <h3>Competitive Rates</h3>
-            <p>Get access to loans with fair and competitive interest rates</p>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="feature-box">
-            <i class="fas fa-headset fa-3x"></i>
-            <h3>Dedicated Support</h3>
-            <p>Our team is always available to assist you with any questions</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="ready-to-start text-center py-5 bg-light">
+  <!-- Trust Indicators -->
+  <section class="py-4 bg-white border-bottom">
     <div class="container">
-      <h2>Ready to Get Started?</h2>
-      <p class="lead">Apply for a loan today and get the financial support you need.</p>
-      <a href="applicant.html" class="btn btn-primary btn-lg">Apply Now</a>
-      <a href="login.html" class="btn btn-secondary btn-lg">Login</a>
+      <div class="row text-center">
+        <div class="col-md-3 col-6 mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-shield-alt text-primary me-2"></i>
+            <span class="fw-semibold">Bank-Level Security</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-clock text-primary me-2"></i>
+            <span class="fw-semibold">24-Hour Decisions</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-percentage text-primary me-2"></i>
+            <span class="fw-semibold">Competitive Rates</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-users text-primary me-2"></i>
+            <span class="fw-semibold">10,000+ Happy Customers</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- Loan Application Process Section -->
+  <section id="process" class="loan-process py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Simple 4-Step Process</h2>
+        <p class="lead text-muted">From application to funding in as little as 24 hours</p>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="process-step text-center h-100">
+            <div class="mb-3">
+              <span class="badge rounded-pill mb-3">1</span>
+              <i class="fas fa-user-plus fa-2x text-primary d-block"></i>
+            </div>
+            <h5 class="fw-semibold">Create Account</h5>
+            <p class="text-muted">Quick registration with secure verification in under 2 minutes.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="process-step text-center h-100">
+            <div class="mb-3">
+              <span class="badge rounded-pill mb-3">2</span>
+              <i class="fas fa-file-alt fa-2x text-primary d-block"></i>
+            </div>
+            <h5 class="fw-semibold">Submit Application</h5>
+            <p class="text-muted">Complete our smart form with AI-assisted guidance.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="process-step text-center h-100">
+            <div class="mb-3">
+              <span class="badge rounded-pill mb-3">3</span>
+              <i class="fas fa-brain fa-2x text-primary d-block"></i>
+            </div>
+            <h5 class="fw-semibold">Instant Review</h5>
+            <p class="text-muted">Our AI analyzes your application and provides instant feedback.</p>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="process-step text-center h-100">
+            <div class="mb-3">
+              <span class="badge rounded-pill mb-3">4</span>
+              <i class="fas fa-money-bill-wave fa-2x text-primary d-block"></i>
+            </div>
+            <h5 class="fw-semibold">Get Funded</h5>
+            <p class="text-muted">Approved funds transferred directly to your account.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="why-choose-us py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold">Why Choose F-lendly?</h2>
+        <p class="lead text-muted">Advanced technology meets personalized service</p>
+      </div>
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-bolt fa-3x mb-3"></i>
+            <h4 class="fw-semibold">Lightning Fast</h4>
+            <p class="text-muted">Complete applications in minutes with our streamlined digital process and instant pre-qualification.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-chart-line fa-3x mb-3"></i>
+            <h4 class="fw-semibold">Smart Decisions</h4>
+            <p class="text-muted">AI-powered risk assessment ensures fair evaluation and competitive rates tailored to your profile.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-shield-alt fa-3x mb-3"></i>
+            <h4 class="fw-semibold">Bank-Grade Security</h4>
+            <p class="text-muted">Your data is protected with 256-bit encryption and multi-factor authentication.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-mobile-alt fa-3x mb-3"></i>
+            <h4 class="fw-semibold">Mobile First</h4>
+            <p class="text-muted">Manage your loans anywhere with our responsive design and mobile-optimized experience.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-percent fa-3x mb-3"></i>
+            <h4 class="fw-semibold">Transparent Pricing</h4>
+            <p class="text-muted">No hidden fees, clear terms, and competitive rates with full transparency from day one.</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="feature-box text-center h-100">
+            <i class="fas fa-headset fa-3x mb-3"></i>
+            <h4 class="fw-semibold">24/7 Support</h4>
+            <p class="text-muted">Expert support team available around the clock via chat, phone, or email.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="py-5 gradient-primary text-white">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6 mb-4">
+          <div class="mb-2">
+            <i class="fas fa-users fa-2x"></i>
+          </div>
+          <h3 class="fw-bold">10,000+</h3>
+          <p class="mb-0">Happy Customers</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="mb-2">
+            <i class="fas fa-dollar-sign fa-2x"></i>
+          </div>
+          <h3 class="fw-bold">$50M+</h3>
+          <p class="mb-0">Loans Funded</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="mb-2">
+            <i class="fas fa-clock fa-2x"></i>
+          </div>
+          <h3 class="fw-bold">24 Hours</h3>
+          <p class="mb-0">Average Decision Time</p>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="mb-2">
+            <i class="fas fa-star fa-2x"></i>
+          </div>
+          <h3 class="fw-bold">4.9/5</h3>
+          <p class="mb-0">Customer Rating</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ready-to-start text-center py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
+          <p class="lead text-muted mb-5">
+            Join thousands of satisfied customers who chose F-lendly for their financial needs. 
+            Apply today and get a decision in minutes.
+          </p>
+          <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+            <a href="applicant.html" class="btn btn-primary btn-lg px-5 py-3">
+              <i class="fas fa-rocket me-2"></i>Start Application
+            </a>
+            <a href="login.html" class="btn btn-outline-primary btn-lg px-5 py-3">
+              <i class="fas fa-sign-in-alt me-2"></i>Login to Account
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-hand-holding-dollar text-primary me-2"></i>
+            <span class="fw-bold">F-lendly</span>
+            <span class="ms-2 text-muted">© 2024 All rights reserved</span>
+          </div>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+          <small class="text-muted">
+            Secure • Transparent • Reliable
+          </small>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
