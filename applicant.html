@@ -10,165 +10,243 @@
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
     rel="stylesheet"
   />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Simple loading spinner style */
     #loadingSpinner {
       display: none;
       position: fixed;
       z-index: 1050;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.8);
       align-items: center;
       justify-content: center;
     }
-    #loadingSpinner .spinner-border {
-      width: 3rem;
-      height: 3rem;
+    .applicant-header {
+      background: linear-gradient(135deg, #007bff, #28a745);
+      color: white;
+      padding: 2rem 0;
+      margin-bottom: 2rem;
+    }
+    .form-container, .loans-container {
+      background: white;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
     }
     @media (max-width: 576px) {
       .container {
-        padding: 0 5px;
+        padding: 0 10px;
       }
-      h2 {
-        font-size: 1.3rem;
-      }
-      .table {
-        font-size: 0.9rem;
+      .form-container, .loans-container {
+        padding: 1rem;
       }
     }
   </style>
 </head>
 <body>
   <div id="loadingSpinner" class="d-flex">
-    <div class="spinner-border text-primary" role="status">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div class="container mt-5">
-    <h2>Loan Application</h2>
-    <form id="loanForm" class="mb-4">
-      <div class="mb-3">
-        <label for="applicantName" class="form-label">Full Name</label>
-        <input
-          type="text"
-          id="applicantName"
-          class="form-control"
-          placeholder="Full Name"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="applicantEmail" class="form-label">Email Address</label>
-        <input
-          type="email"
-          id="applicantEmail"
-          class="form-control"
-          placeholder="Email Address"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="businessName" class="form-label"
-          >Business Name (if applicable)</label
-        >
-        <input
-          type="text"
-          id="businessName"
-          class="form-control"
-          placeholder="Business Name"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="businessRegistration" class="form-label"
-          >Business Registration Number (if applicable)</label
-        >
-        <input
-          type="text"
-          id="businessRegistration"
-          class="form-control"
-          placeholder="Business Registration Number"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="amount" class="form-label">Loan Amount</label>
-        <input
-          type="number"
-          id="amount"
-          class="form-control"
-          placeholder="Loan Amount"
-          required
-          min="1"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="purpose" class="form-label">Purpose</label>
-        <input
-          type="text"
-          id="purpose"
-          class="form-control"
-          placeholder="Purpose"
-          required
-        />
-      </div>
-      <button type="submit" class="btn btn-primary">Apply</button>
-    </form>
 
-    <div
-      id="successMessage"
-      class="alert alert-success"
-      style="display: none"
-    >
-      Loan application submitted successfully!
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">
+        <i class="fas fa-hand-holding-dollar"></i> F-lendly
+      </a>
+      <div class="navbar-nav ms-auto">
+        <button id="logoutBtn" class="btn btn-outline-primary">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="applicant-header text-center">
+    <div class="container">
+      <h1><i class="fas fa-user-circle"></i> Welcome to Your Dashboard</h1>
+      <p class="lead">Apply for loans and track your applications</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Loan Application Form -->
+    <div class="form-container">
+      <h3><i class="fas fa-file-alt"></i> Apply for a Loan</h3>
+      <form id="loanForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="applicantName" class="form-label">
+                <i class="fas fa-user"></i> Full Name
+              </label>
+              <input
+                type="text"
+                id="applicantName"
+                name="name"
+                class="form-control"
+                placeholder="Enter your full name"
+                required
+                readonly
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="applicantEmail" class="form-label">
+                <i class="fas fa-envelope"></i> Email Address
+              </label>
+              <input
+                type="email"
+                id="applicantEmail"
+                name="email"
+                class="form-control"
+                placeholder="Enter your email"
+                required
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="businessName" class="form-label">
+                <i class="fas fa-building"></i> Business Name (Optional)
+              </label>
+              <input
+                type="text"
+                id="businessName"
+                name="businessName"
+                class="form-control"
+                placeholder="Enter business name"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="businessRegistration" class="form-label">
+                <i class="fas fa-certificate"></i> Business Registration (Optional)
+              </label>
+              <input
+                type="text"
+                id="businessRegistration"
+                name="businessRegistration"
+                class="form-control"
+                placeholder="Enter registration number"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="amount" class="form-label">
+                <i class="fas fa-dollar-sign"></i> Loan Amount
+              </label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                class="form-control"
+                placeholder="Enter loan amount"
+                required
+                min="100"
+                step="100"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="purpose" class="form-label">
+                <i class="fas fa-bullseye"></i> Purpose
+              </label>
+              <input
+                type="text"
+                id="purpose"
+                name="purpose"
+                class="form-control"
+                placeholder="Purpose of the loan"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="fas fa-paper-plane"></i> Submit Application
+        </button>
+      </form>
+
+      <div
+        id="successMessage"
+        class="alert alert-success mt-3"
+        style="display: none"
+      >
+        <i class="fas fa-check-circle"></i> Loan application submitted successfully!
+      </div>
     </div>
 
-    <h2 class="mt-5">Your Loan Applications</h2>
-    <div id="loanApplications" class="mb-5">
-      <table class="table table-bordered" id="applicantLoansTable">
-        <thead>
-          <tr>
-            <th>Application ID</th>
-            <th>Amount</th>
-            <th>Purpose</th>
-            <th>Status</th>
-            <th>Payment Status</th>
-            <th>Submitted At</th>
-            <th>Repayment Schedule</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Loan applications will be dynamically inserted here -->
-        </tbody>
-      </table>
+    <!-- Loan Applications History -->
+    <div class="loans-container">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3><i class="fas fa-history"></i> Your Loan Applications</h3>
+        <button class="btn btn-outline-primary btn-sm" onclick="app.loadApplicantLoans()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table table-hover" id="applicantLoansTable">
+          <thead class="table-dark">
+            <tr>
+              <th>Application ID</th>
+              <th>Amount</th>
+              <th>Purpose</th>
+              <th>Status</th>
+              <th>Payment Status</th>
+              <th>Submitted</th>
+              <th>Repayments</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Loan applications will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 
-    <!-- Repayment Schedule Modal -->
-    <div class="modal fade" id="repaymentModal" tabindex="-1" aria-labelledby="repaymentModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="repaymentModalLabel">Repayment Schedule</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="repaymentModalBody">
-            <!-- Repayment schedule will be loaded here -->
-          </div>
+  <!-- Repayment Schedule Modal -->
+  <div class="modal fade" id="repaymentModal" tabindex="-1" aria-labelledby="repaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="repaymentModalLabel">
+            <i class="fas fa-calendar-alt"></i> Repayment Schedule
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="repaymentModalBody">
+          <!-- Repayment schedule will be loaded here -->
         </div>
       </div>
     </div>
-
-    <button id="logoutBtn" class="btn btn-danger">Logout</button>
   </div>
 
-  <script src="script.js"></script>
-  <script>
-    // Show/hide loading spinner helpers
-    window.showLoading = function() {
-      document.getElementById('loadingSpinner').style.display = 'flex';
-    }
-    window.hideLoading = function() {
-      document.getElementById('loadingSpinner').style.display = 'none';
-    }
-  </script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="auth.js"></script>
+  <script src="enhanced-script.js"></script>
 </body>
 </html>
